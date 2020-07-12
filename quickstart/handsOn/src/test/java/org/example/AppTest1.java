@@ -1,7 +1,9 @@
 package org.example;
 import static org.junit.Assert.assertTrue;
 
+import io.reactivex.rxjava3.annotations.NonNull;
 import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.core.Observer;
 import io.reactivex.rxjava3.disposables.Disposable;
 import org.junit.Test;
 
@@ -42,7 +44,41 @@ public class AppTest1 {
         integerList.add(2);
         integerList.add(3);
         Observable<Integer> integerObservable = Observable.fromIterable(integerList);
-        integerObservable.map(y->y.toString());
-        integerObservable.subscribe(x->System.out.println(x));
+        integerObservable.map(y -> y.toString());
+        integerObservable.subscribe(x -> System.out.println(x));
+        Observable<Integer> integerObservable1 = integerObservable.cacheWithInitialCapacity(1);
+
     }
+
+    @Test
+    public void testObserverInterface() {
+        List<Integer> integerList = new LinkedList<>();
+        integerList.add(1);
+        integerList.add(2);
+        integerList.add(3);
+        Observer<Integer> observer = new Observer<Integer>() {
+            @Override
+            public void onSubscribe(@NonNull Disposable d) {
+                System.out.println("Subscribed");
+            }
+
+            @Override
+            public void onNext(@NonNull Integer integer) {
+              System.out.println(integer);
+            }
+
+            @Override
+            public void onError(@NonNull Throwable e) {
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onComplete() {
+               System.out.println("Completed!");
+            }
+        };
+        Observable.fromIterable(integerList).subscribe(observer);
+
+       }
+
 }
