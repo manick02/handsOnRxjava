@@ -47,7 +47,6 @@ public class AppTest1 {
         integerObservable.map(y -> y.toString());
         integerObservable.subscribe(x -> System.out.println(x));
         Observable<Integer> integerObservable1 = integerObservable.cacheWithInitialCapacity(1);
-
     }
 
     @Test
@@ -80,5 +79,10 @@ public class AppTest1 {
         Observable.fromIterable(integerList).subscribe(observer);
 
        }
+
+      @Test
+      public void testObservableRange() {
+          Observable.range(1,3).subscribe(x->{System.out.println(x);});
+      }
 
 }
