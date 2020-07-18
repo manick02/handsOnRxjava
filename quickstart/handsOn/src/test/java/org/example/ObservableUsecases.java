@@ -2,16 +2,16 @@ package org.example;
 import static org.junit.Assert.assertTrue;
 
 import io.reactivex.rxjava3.annotations.NonNull;
-import io.reactivex.rxjava3.core.Observable;
-import io.reactivex.rxjava3.core.Observer;
+import io.reactivex.rxjava3.core.*;
 import io.reactivex.rxjava3.disposables.Disposable;
+import io.reactivex.rxjava3.functions.Function;
 import org.junit.Test;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.stream.Collector;
+import java.util.concurrent.TimeUnit;
 
-public class AppTest1 {
+public class ObservableUsecases {
 
     @Test
     public void createAnObservable(){
@@ -84,5 +84,62 @@ public class AppTest1 {
       public void testObservableRange() {
           Observable.range(1,3).subscribe(x->{System.out.println(x);});
       }
+
+      @Test
+      public void testObservableInterval() throws InterruptedException {
+        Observable.timer(1, TimeUnit.SECONDS).subscribe(x->System.out.println("Called"));
+//        Thread.sleep(30000);
+      }
+
+      @Test
+      public void testObservable() {
+//        Observable.timer(1, TimeUnit.SECONDS, new Scheduler() {
+//            @Override
+//            public @NonNull Worker createWorker() {
+//                return null;
+//            }
+//        })
+//        Observable.zip(Observable.just(1,2,3),Observable.just(1,2,3));
+//        Observable.zip().subscribe();
+//        Observable.fromIterable()
+
+          Observable<Object> empty = Observable.empty();
+          empty.subscribe(System.out::println,Throwable::printStackTrace,()->System.out.println("Done!"));
+      }
+
+      @Test
+      public void testFromMaybeSource() {
+        Observable.fromMaybe(Maybe.empty()).subscribe(System.out::println,Throwable::printStackTrace,()->System.out.println("Done"));
+        Observable.fromMaybe(Maybe.just(1)).subscribe(System.out::println,Throwable::printStackTrace,()->System.out.println("Done"));
+//        Disposable done = Observable.zip(Observable.just(5,6,7), Observable.just(4, 5, 6)).subscribe(System.out::println, Throwable::printStackTrace, () -> System.out.println("Done"));
+
+//       Observable.zip(new ).subscribe(System.out::println,Throwable::printStackTrace,()->System.out.println("Done"));
+    }
+
+      public class SomeMaybeSource implements MaybeSource<Integer> {
+
+          @Override
+          public void subscribe(@NonNull MaybeObserver<? super Integer> observer) {
+              observer.onSuccess(1);
+          }
+      }
+
+//      public class ExampleObservableSource<Integer> implements ObservableSource<Integer>, @NonNull Function<Object[], R> {
+//
+//          @Override
+//          public void subscribe(@NonNull Observer<? super Integer> observer) {
+//              observer.onNext(1);
+//              observer.onNext(2);
+//              observer.onNext(3);
+//          }
+//
+//          @Override
+//          public R apply(Object[] objects) throws Throwable {
+//              return null;
+//          }
+//      }
+
+
+
 
 }
