@@ -105,6 +105,7 @@ public class ObservableUsecases {
 
           Observable<Object> empty = Observable.empty();
           empty.subscribe(System.out::println,Throwable::printStackTrace,()->System.out.println("Done!"));
+
       }
 
       @Test
@@ -138,6 +139,52 @@ public class ObservableUsecases {
 //              return null;
 //          }
 //      }
+
+      @Test
+      public void onTestNever() {
+        Observable.never().subscribe(System.out::println,Throwable::printStackTrace,()->System.out.println("Am done"));
+
+      }
+
+      @Test
+      public void testDeferUnderStandProblem() {
+          int start = 0;
+          int count = 3;
+          Observable<Integer> source = Observable.range(start, count);
+          source.subscribe(i -> System.out.println("Observer 1: " + i));
+          //modify count
+          count = 5;
+          source.subscribe(i -> System.out.println("Observer 2: " + i));
+    }
+
+    @Test
+    public void testDeferUnderStandDefer() {
+        int start = 0;
+        final int count = 3;
+        Observable<Integer> source = Observable.defer(()->Observable.range(start, count));
+        source.subscribe(i -> System.out.println("Observer 1: " + i));
+        //modify count
+        source.subscribe(i -> System.out.println("Observer 2: " + i));
+    }
+
+    static int count = 5;
+    @Test
+    public void testDefer() {
+        int start = 0;
+        Observable<Integer> source = Observable.defer(() ->
+                Observable.range(start, count));
+        source.subscribe(i -> System.out.println("Observer 1: " + i));
+        count = 9;
+        source.subscribe(i -> System.out.println("Observer 2: " + i));
+    }
+
+    @Test
+    public void testFromCallable() {
+        int start = 0;
+        Observable.fromCallable(()->2).map(x->x*x).subscribe(System.out::println,Throwable::printStackTrace,()->System.out.println("This is complete"));
+    }
+
+
 
 
 
