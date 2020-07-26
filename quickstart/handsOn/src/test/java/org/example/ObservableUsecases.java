@@ -13,6 +13,8 @@ import java.util.concurrent.TimeUnit;
 
 public class ObservableUsecases {
 
+
+
     @Test
     public void createAnObservable(){
         Observable<String> observable1 = Observable.just("list1", "list2", "list3");
@@ -180,13 +182,25 @@ public class ObservableUsecases {
 
     @Test
     public void testFromCallable() {
-        int start = 0;
         Observable.fromCallable(()->2).map(x->x*x).subscribe(System.out::println,Throwable::printStackTrace,()->System.out.println("This is complete"));
     }
 
+    @Test
+    public void testFromCallable2() {
+        Observable.fromCallable(()->{
+            List<Integer> integerList = new LinkedList<Integer>();
+            for(int i = 0; i < 10; i ++)
+                integerList.add(i);
+
+            return integerList;
+        });
+    }
+
+   @Test
+   public void testFromCallable3() {
 
 
-
+   }
 
 
 }
